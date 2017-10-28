@@ -6,8 +6,8 @@
     fxLayoutGap="10px" 
     fxLayoutGap.xs="0">
 
-  <div fxFlex="40" *ngIf="dish">
-    <md-card>
+  <div fxFlex="40">
+    <md-card *ngIf="dish">
         <md-card-header>
           <md-card-title>
             <h3>{{ dish.name | uppercase }}</h3>
@@ -24,16 +24,12 @@
       </md-card>
   </div>
 
-  <div fxFlex="40" fxLayout="column" *ngIf="dish">
-      <h3>Comments</h3>
-      <md-list fxFlex>
+  <div fxFlex="40">
+      <md-list *ngIf="dish">
+        <h3>Comments</h3>
         <md-list-item *ngFor="let comment of dish.comments">
-            <p md-line>
-              <span> {{comment.comment}} </span>
-            </p>
-            <p md-line>
-              <span> {{comment.rating}} Stars </span>
-            </p>
+            <p md-line> {{comment.comment}} </p>
+            <p md-line> {{comment.rating}} Stars</p>
             <p md-line>
               <span> -- {{comment.author}} {{comment.date | date}} </span>
             </p>
