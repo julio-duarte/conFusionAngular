@@ -7,16 +7,16 @@ export class DishService {
 
   constructor() { }
 
-  getDishes(): Dish[] {
-    return DISHES;
+  getDishes(): Promise<Dish[]> {
+    return Promise.resolve(DISHES);
   }
 
-  getDish(id: number): Dish {
-    return DISHES.filter((dish) => (dish.id === id))[0];
+  getDish(id: number): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => (dish.id === id))[0]);
   }
 
-  getFeturedDish(): Dish {
-    return DISHES.filter((dish) => (dish.featured === true))[0];
+  getFeturedDish(): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => (dish.featured === true))[0]);
   }
 
 }
