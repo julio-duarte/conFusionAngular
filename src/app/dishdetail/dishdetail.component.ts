@@ -18,6 +18,7 @@ import { Comment } from '../shared/comment';
 export class DishdetailComponent implements OnInit {
 
   dish: Dish;
+  dishcopy = null;
   dishIds: number[];
   prev: number;
   next: number;
@@ -50,18 +51,17 @@ export class DishdetailComponent implements OnInit {
     private location: Location,
     private fb: FormBuilder,
     @Inject('BaseURL') private BaseURL) { 
-      this.createForm();
+      
     }
 
   ngOnInit() {
-    // let id = +this.route.snapshot.params['id'];
-    // this.dishservice.getDish(id)
-    //   .subscribe(dish => this.dish = dish);
+    this.createForm();
 
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
     this.route.params
       .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
-      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); }, errmess => this.errMess = <any>errmess);
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); }, 
+          errmess => this.errMess = <any>errmess);
   }
 
   goBack(): void {
@@ -108,13 +108,16 @@ export class DishdetailComponent implements OnInit {
 
   onSubmit() {
     this.comment = this.commentForm.value;
-
-    this.dish.comments.push({
-        author: this.commentForm.get('author').value,
-        comment: this.commentForm.get('comment').value,
-        rating: this.commentForm.get('rating').value,
-        date: (new Date()).toISOString()
-      });
+    this.comment.date = (new Date()).toISOString();
+    
+    this.dish.comments.push(this.comment);
+    
+    //this.dish.comments.push({
+        //author: this.commentForm.value.author, //.get('author').value,
+        //comment: this.commentForm.value.comment,
+        //rating: this.commentForm.value.rating,
+      //  date: (new Date()).toISOString()
+      //});
 
     this.commentForm.reset({
       author: '',
