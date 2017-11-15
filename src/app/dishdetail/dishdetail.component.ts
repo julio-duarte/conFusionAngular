@@ -23,7 +23,7 @@ import { Comment } from '../shared/comment';
   animations: [
     visibility(),
     flyInOut(),
-    expand()
+    expand()  
   ]
 })
 export class DishdetailComponent implements OnInit {
@@ -71,8 +71,14 @@ export class DishdetailComponent implements OnInit {
 
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
     this.route.params
-      .switchMap((params: Params) => { this.visibility = 'hidden'; return this.dishservice.getDish(+params['id']); } )
-      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'; }, 
+      .switchMap((params: Params) => { 
+        this.visibility = 'hidden'; 
+        return this.dishservice.getDish(+params['id']); 
+      } )
+      .subscribe(dish => { 
+        this.dish = dish; 
+        this.dishcopy = dish; 
+        this.setPrevNext(dish.id); this.visibility = 'shown'; }, 
           errmess => this.errMess = <any>errmess);
   }
 

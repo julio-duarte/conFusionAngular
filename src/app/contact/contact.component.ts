@@ -1,7 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animation';
+import { FeedbackService } from '../services/feedback.service';
+
+import { Params, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import 'rxjs/add/operator/switchMap';
+import { visibility, flyInOut, expand } from '../animations/app.animation';
+
 
 @Component({
   selector: 'app-contact',
@@ -12,14 +18,20 @@ import { flyInOut } from '../animations/app.animation';
     'style': 'display: block'
   },
   animations: [
-    flyInOut()
+    visibility(),
+    flyInOut(),
+    expand()  
   ]
 })
 export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
   feedback: Feedback;
+  feedbackret: Feedback;
   contactType = ContactType;
+
+  feedbackErrMess: string;
+  
 
   formErrors = {
     'firstname': '',
@@ -49,7 +61,14 @@ export class ContactComponent implements OnInit {
     }
   };
 
-  constructor(private fb: FormBuilder) { 
+  //,
+  //private feedbackservice: FeedbackService,
+  //@Inject('BaseURL') private BaseURL
+
+  
+
+  constructor(private fb: FormBuilder,
+    private feedbackservice: FeedbackService) { 
     this.createForm();
   }
 
@@ -91,9 +110,29 @@ export class ContactComponent implements OnInit {
     }
   }
 
+
+  _edit: boolean = true;
+  _show: boolean = false;
+  _wait: boolean = false;
+
   onSubmit() {
     this.feedback = this.feedbackForm.value;
     console.log(this.feedback);
+
+    this.feedbackret = null;
+    this._edit = false; this._wait = true; this._show = false;
+
+    alert(1);
+    this.feedbackservice.submitFeedback(this.feedback)
+      .subscribe(feedback => { 
+        this.feedbackret = feedback; 
+        this._edit = false; this._wait = false; this._show = true;
+        setTimeout(()=> { this._edit = true; this._wait = false; this._show = false;}, 5000);
+
+      });
+    this.feedbackret = null;
+alert(3);
+    
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
@@ -103,6 +142,7 @@ export class ContactComponent implements OnInit {
       contacttype: 'None',
       message: ''
     });
+
   }
 
 }
